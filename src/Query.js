@@ -23,7 +23,7 @@ let where = (curBase, ebm, cd, m) => {
         if (cd[1] == null) {
             curBase.sql += ` ${ebm} ${cd[0]} ${m ? 'is not null' : 'is null'}`;
         } else {
-            curBase.sql += ` ${ebm} ${cd[0]} ${m ? m : '='}=?`;
+            curBase.sql += ` ${ebm} ${cd[0]} ${m ? m : '='}?`;
         }
     }
     if (cd[1] != null)
