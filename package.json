@@ -1,0 +1,28 @@
+{
+  "name": "node_mysql",
+  "version": "1.0.0",
+  "description": "node mysql",
+  "main": "index.js",
+  "scripts": {
+    "test": "node example/test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bulangnisi/node-mysql.git"
+  },
+  "keywords": [
+    "nodejs",
+    "mysql"
+  ],
+  "author": "Benjen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bulangnisi/node-mysql/issues"
+  },
+  "homepage": "https://github.com/bulangnisi/node-mysql#readme",
+  "dependencies": {
+    "lodash": "^4.17.10",
+    "mysql": "^2.15.0",
+    "mysql-queues": "^1.0.0"
+  }
+}
