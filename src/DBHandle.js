@@ -66,6 +66,7 @@ class DbHandle {
                     this.transaction.query(q.sql, q.params, this.__queryResult.bind(this));
                 }
                 this.transaction.execute();
+                conn.release();
             }).catch(err => reject(err)); 
         })
     }
