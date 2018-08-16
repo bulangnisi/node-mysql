@@ -1,13 +1,14 @@
 "use strict";
 
 const mysql = require('mysql');
-const queues = require('mysql-queues');
+const Monkey = require('./Monkey');
+const {remove} = require('lodash');
 
 class DbHandle {
 
     constructor() {
         this.DBPool = null;
-        this.__initTransaction();
+        this.monkeys = [];
     }
 
     instance(conf){
@@ -28,45 +29,18 @@ class DbHandle {
         })
     }
 
-    __initTransaction(){
-        this.transaction = null;
-        this.errCount = 0;
-        this.queryCount = 0;
-        this.queries = [];
-        this.resolve = null;
-        this.reject = null;
-    }
-
-    __queryResult(err, result){
-        this.queryCount ++;
-        if(err) this.errCount ++;
-        if(this.queryCount == this.queries.length) {
-            if (this.errCount == 0) {
-                this.transaction.commit();
-                this.resolve(result);
-            }else{
-                this.transaction.rollback();
-                this.reject(err);
-            }
-            this.__initTransaction();
-        }
+    __dissolve(mark){
+        remove(this.monkeys, m => { return mark == m.mark });
     }
 
     exec(queries){
         return new Promise((resolve, reject) => {
             return this.getConnection().then(conn => {
-                this.queries = Array.isArray(queries) ? queries : [queries];
-                this.resolve = resolve;
-                this.reject = reject;
-                if(conn != null){
-                    queues(conn);
-                    this.transaction = conn.startTransaction();
+                if(conn){
+                    let mm = new Monkey(conn, queries, resolve, reject, this.__dissolve.bind(this));
+                    this.monkeys.push(mm);
+                    mm.run();
                 }
-                for(let q of this.queries){
-                    this.transaction.query(q.sql, q.params, this.__queryResult.bind(this));
-                }
-                this.transaction.execute();
-                conn.release();
             }).catch(err => reject(err)); 
         })
     }
