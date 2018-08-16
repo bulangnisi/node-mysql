@@ -34,7 +34,6 @@ class Monkey {
                 this.transaction.rollback();
                 this.reject(err);
             }
-            console.log('猴子跑完了');
             if(this.dissolve) this.dissolve(this.mark);
         }
     }
